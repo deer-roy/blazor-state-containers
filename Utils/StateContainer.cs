@@ -2,7 +2,6 @@ namespace BlazorState.Utils;
 
 public class StateContainer<T>
 {
-
     private readonly T _initialState;
     private T _state;
 
@@ -52,7 +51,6 @@ public class ActionContainer()
         OnChange?.Invoke();
     }
 
-    // Overload the + operator
     public static ActionContainer operator +
     (
         ActionContainer a,
@@ -72,7 +70,6 @@ public class ActionContainer()
     {
         a.OnChange -= b;
         a._listenerCount -= 1;
-        Console.WriteLine($"Listeners: {a._listenerCount}");
         if (a._listenerCount == 0)
         {
             a.OnLastUnsubscribe?.Invoke();
