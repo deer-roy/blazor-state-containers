@@ -1,0 +1,72 @@
+@using BlazorState.Pages.MegaContainer
+@inject StateContainer<StateLoginEntries> LoginEntriesStateContainer;
+@inject UseCaseFetchLoginEntries FetchLoginEntriesUseCase;
+
+<h3>Login history</h3>
+
+
+<div class="container p-4">
+    @if (LoginEntriesState.Loading)
+    {
+        <DivImg Url="/spinner.svg" Style="margin: auto; "/>
+    }
+    else if (LoginEntriesStateContainer.State.Error is {} error)
+    {
+        <span class="material-symbols-rounded">
+            warning
+        </span>
+        <p>@(error)</p>
+    <button class="btn btn-primary" @onclick="FetchLoginEntries">Try again</button>
+    }
+    else if (LoginEntriesState.LoginEntries is {} entries)
+    {
+        <table class="table">
+            <thead>
+            <tr>
+                <th scope="col">Date</th>
+                <th scope="col">User Agent</th>
+                <th scope="col">Location</th>
+            </tr>
+            </thead>
+            <tbody>
+            @foreach (var (date, userAgent, location) in entries)
+            {
+                <tr>
+                    <td>@date</td>
+                    <td>@userAgent</td>
+                    <td>@location</td>
+                </tr>
+            }
+            </tbody>
+        </table>
+        
+        <button class="mt-3 btn btn-primary" @onclick="FetchLoginEntries">Fetch LoginEntries</button>
+    }
+    else
+    {
+        <h6>No login entries loaded, click below to fetch entries.</h6>
+        <br>
+        <button class="btn btn-primary" @onclick="FetchLoginEntries">Fetch LoginEntries</button>
+    }
+</div>
+
+@code {
+
+    StateLoginEntries LoginEntriesState => LoginEntriesStateContainer.State;
+
+    protected override void OnInitialized()
+    {
+        base.OnInitialized();
+        LoginEntriesStateContainer.OnChange += StateHasChanged;
+    }
+
+    public void Dispose()
+    {
+        LoginEntriesStateContainer.OnChange -= StateHasChanged;
+    }
+
+    Task FetchLoginEntries()
+    {
+        return FetchLoginEntriesUseCase.Execute();
+    }
+}

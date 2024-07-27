@@ -1,0 +1,56 @@
+@inject StateContainer<StateProfile> ProfileStateContainer
+@inject UseCaseFetchProfile FetchProfileUseCase
+@using BlazorState.Pages.MegaContainer
+@implements IDisposable
+
+<h3>Profile</h3>
+
+
+<div class="container p-4">
+    @if (ProfileStateContainer.State.Loading)
+    {
+        <DivImg Url="/spinner.svg" Style="margin: auto; "/> 
+    } else if (ProfileStateContainer.State.Error is {} error)
+    {
+        <span class="material-symbols-rounded">
+            warning
+        </span>
+        <p>@(error)</p>
+        
+        <button class="btn btn-primary" @onclick="FetchProfile">Try again.</button>
+    }
+    else if(ProfileStateContainer.State.User is {} user)
+    {
+        <DivImg Url="@(user.ProfileImageUrl)" Size="84" Style="border-radius: 8px;" />
+        <br/>
+        <p>Username: <b>@(user.UserName)</b></p>
+        <p>Email: @(user.Email)<b></b></p>
+        <br>
+        <button class="btn btn-primary" @onclick="FetchProfile">Fetch Profile</button>
+    }
+    else
+    {
+        <h6>No profile loaded, click below to fetch one.</h6>    
+        <br>
+        <button class="btn btn-primary" @onclick="FetchProfile">Fetch Profile</button>
+    }
+</div>
+@code {
+    StateProfile ProfileState => ProfileStateContainer.State;
+
+    protected override void OnInitialized()
+    {
+        base.OnInitialized();
+        ProfileStateContainer.OnChange += StateHasChanged;
+    }
+    
+    public void Dispose()
+    {
+        ProfileStateContainer.OnChange -= StateHasChanged;
+    }
+    
+    Task FetchProfile()
+    {
+        return FetchProfileUseCase.Execute();
+    }
+}

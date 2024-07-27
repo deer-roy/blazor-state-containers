@@ -1,0 +1,13 @@
+<div style="width: @(Size)px; height: @(Size)px; background-image: url(@Url); background-size: cover;@(Style)"></div>
+
+@code {
+   [Parameter]
+   public int Size { get; set; } = 36;
+
+   [EditorRequired]
+   [Parameter]
+   public string Url { get; set; } = null!;
+
+   [Parameter]
+   public string Style { get; set; } = "";
+}

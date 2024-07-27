@@ -1,0 +1,125 @@
+@inject StateContainer<StateMessages> MessagesStateContainer
+@inject StateContainer<StateProfile> ProfileStateContainer
+@inject UseCaseFetchMessages FetchMessagesUseCase
+@inject UseCaseSendMessage SendMessageUseCase
+@inject NavigationManager Navigator
+@using BlazorState.Pages.MegaContainer
+@implements IDisposable
+
+<h3>Messages</h3>
+<br>
+
+@if (MessagesState.Loading)
+{
+    <DivImg Url="/spinner.svg" Style="margin: auto; "/>
+}
+else if (MessagesState.Error is {} error)
+{
+    <span class="material-symbols-rounded">
+        warning
+    </span>
+    <p>@(error)</p>
+    <br/>
+    <button class="btn btn-primary" @onclick="FetchMessages">Try again</button>
+
+}
+else
+{
+    <section class="accordion">
+        @for(var i = 0; i < MessagesState.Messages.Count; i++)
+        {
+            var msg = MessagesState.Messages[i];
+            <div class="tab">
+                <input type="checkbox" name="accordion-1" id="cb@(i)">
+                <label for="cb@(i)" class="tab__label">@(msg.SentAt.ToString()): @(msg.From)</label>
+                <div class="tab__content">
+                    <p>@(msg.Message)</p>
+                </div>
+            </div>
+        }
+    </section>
+
+    <button class="mt-3 btn btn-outline-primary" @onclick="ShowNewMessageModal" data-toggle="modal" data-target="#exampleModal">New Message</button>
+    @if (_showNewMessageModal)
+    {
+        <div style="background: rgba(0,0,0,0.2);position:  fixed; left: 0; right:  0; top:  0; bottom: 0; z-index: 9;"> </div>
+        <div style="position: fixed; margin:  auto; height: 400px; left: 0; right:  0; top:  0; bottom:  0;z-index: 10;"class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">Send a new message</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close" @onclick="CloseNewMessageModal">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                @if (_sendMessageLoading)
+                {
+                    <DivImg Url="/spinner.svg"/>
+                }
+                else
+                {
+                    <div class="modal-body">
+                        <div class="form-group">
+                            <label for="message">Message</label>
+                            <textarea class="form-control" id="message" @bind="_message"></textarea>
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-primary" @onclick="SendMessage">Send Message</button>
+                        <button type="button" class="btn btn-secondary" @onclick="CloseNewMessageModal">Close</button>
+                    </div>
+                }
+            </div>
+        </div>
+    }
+}
+
+@code {
+
+    StateMessages MessagesState => MessagesStateContainer.State;
+    string _message = "";
+    bool _showNewMessageModal;
+    bool _sendMessageLoading;
+
+    protected override async Task OnInitializedAsync()
+    {
+        await base.OnInitializedAsync();
+        MessagesStateContainer.OnChange += StateHasChanged;
+        await FetchMessages();
+    }
+
+    Task FetchMessages()
+    {
+        return FetchMessagesUseCase.Execute();
+    }
+
+    async Task SendMessage()
+    {
+        _sendMessageLoading = true;
+        await SendMessageUseCase.Execute(new ModelMessage(
+            DateTime.Now,
+            ProfileStateContainer.State.User?.UserName ?? "Anonymous",
+            _message
+        ));
+
+        _sendMessageLoading = false;
+        _message = "";
+        CloseNewMessageModal();
+    }
+
+    void ShowNewMessageModal()
+    {
+        _showNewMessageModal = true;
+    }
+
+    void CloseNewMessageModal()
+    {
+        _showNewMessageModal = false;
+    }
+
+    public void Dispose()
+    {
+        MessagesStateContainer.OnChange -= StateHasChanged;
+
+    }
+}
+
