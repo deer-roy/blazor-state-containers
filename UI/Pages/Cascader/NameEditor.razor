@@ -1,0 +1,19 @@
+<h3>Edit name</h3>
+<input type="text" @bind="_newName">
+<button class="btn btn-primary" @onclick="SaveName">Save</button>
+@code {
+  [CascadingParameter]
+  Cascader.NameDataHolder _nameDataHolder { get; set; } = null!; 
+  string _newName = "";
+
+  protected override void OnInitialized()
+  {
+    base.OnInitialized();
+    _newName = _nameDataHolder.Name;
+  }
+
+  void SaveName()
+  {
+    _nameDataHolder.Name = _newName;
+  }
+}

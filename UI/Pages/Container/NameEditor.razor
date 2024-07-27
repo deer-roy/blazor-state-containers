@@ -1,0 +1,44 @@
+@* ReSharper disable once InconsistentNaming *@
+@inject NameStateContainer _NameStateContainer;
+@using BlazorState.Pages.Container
+@implements IDisposable
+
+<h3>Edit name</h3>
+<input type="text" @bind="_newName">
+<button class="btn btn-primary" @onclick="SaveName">Save</button>
+@code {
+  string _newName = "";
+
+  protected override void OnInitialized()
+  {
+    base.OnInitialized();
+    _newName = _NameStateContainer.Name;
+
+    // _NameStateContainer.OnChange += StateHasChanged;
+    _NameStateContainer.OnChange += () => {
+      _newName = _NameStateContainer.Name;
+      
+    Console.WriteLine("NameEditor: OnChange");
+      StateHasChanged();
+    };
+  }
+
+  protected override void OnAfterRender
+  (
+    bool firstRender
+  )
+  {
+    base.OnAfterRender(firstRender);
+    Console.WriteLine("NameEditor: re-rendered");
+  }
+
+
+  void SaveName()
+  {
+    _NameStateContainer.Name = _newName;
+  }
+  public void Dispose()
+  {
+    _NameStateContainer.OnChange -= StateHasChanged;
+  }
+}

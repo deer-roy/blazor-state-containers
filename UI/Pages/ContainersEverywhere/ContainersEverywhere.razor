@@ -1,0 +1,74 @@
+@page "/ContainersEverywhere"
+@using BlazorState.Pages.Container
+@using BlazorState.Pages.ContainersEverywhere
+@inject StateContainer<StateMessage> _MessageStateContainer;
+@inject NameStateContainer _NameStateContainer;
+@inject UseCaseFetchMessage UseCaseFetchMessage;
+
+@implements IDisposable
+
+<h3>Containers Everywhere</h3>
+
+<div style="border: 1px solid darkslategrey; padding: 16px;">
+    <h2>Name things</h2>
+    <br><br>
+    <h4>Name is currently @(_NameStateContainer.Name)</h4>
+    <button class="btn btn-primary" @onclick="RandomizeName">Randomize Name</button>
+</div>
+<br>
+<div style="border: 1px solid darkslategrey; padding: 16px;">
+    <h2>Server message things</h2>
+    <br><br>
+    @if (Msg.Loading)
+    {
+        <div style="margin: auto; width: 64px; height: 64px; background-image: url('/spinner.svg'); background-size: cover;"></div>
+    }
+    else if (Msg.Error != null)
+    {
+        <h4>Request failed with error: @(_MessageStateContainer.State.Error)</h4>
+        <button class="btn btn-primary" @onclick="FetchMessage">Try again</button>
+    }
+    else
+    {
+        <h4>@(Message)</h4>
+        <button class="btn btn-primary" @onclick="FetchMessage">Fetch Message</button>
+    }
+</div>
+
+@code {
+
+    StateMessage Msg => _MessageStateContainer.State;
+    string Message => string.IsNullOrWhiteSpace(Msg.Message) ?
+        "No messages, maybe try fetching one" : Msg.Message;
+    
+    protected override void OnInitialized()
+    {
+        base.OnInitialized();
+        _NameStateContainer.OnChange += StateHasChanged;
+        _MessageStateContainer.OnChange += StateHasChanged;
+    }
+    public void Dispose()
+    {
+        _NameStateContainer.OnChange -= StateHasChanged;
+        _MessageStateContainer.OnChange -= StateHasChanged;
+    }
+   
+    void RandomizeName()
+    {
+        _NameStateContainer.Name = RandomNameHelper.GetRandomName();
+    }
+
+    protected override void OnAfterRender
+    (
+        bool firstRender
+    )
+    {
+        base.OnAfterRender(firstRender);
+        if(!firstRender)
+            Console.WriteLine("ContainersEverywhere: Re-rendered");
+    }
+    Task FetchMessage()
+    {
+        return UseCaseFetchMessage.Execute();
+    }
+}

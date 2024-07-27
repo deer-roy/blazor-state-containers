@@ -1,0 +1,44 @@
+@page "/container"
+@using BlazorState.Pages.Container
+
+@inject NameStateContainer _NameStateContainer;
+@implements IDisposable
+
+
+
+<h1>Container Page</h1>
+<br>
+<h2>Hello there, @(_NameStateContainer.Name)</h2>
+
+<button class="btn btn-primary" @onclick="RandomizeName">Randomize Name</button>
+<br><br>
+<NameEditor/>
+@code {
+
+    void RandomizeName()
+    {
+        _NameStateContainer.Name = RandomNameHelper.GetRandomName();
+    }
+
+    protected override void OnInitialized()
+    {
+        base.OnInitialized();
+        _NameStateContainer.OnChange += () => {
+            StateHasChanged();
+            Console.WriteLine("ContainerPage: OnChange");
+        };
+    }
+    public void Dispose()
+    {
+        _NameStateContainer.OnChange -= StateHasChanged;
+    }
+
+  protected override void OnAfterRender
+  (
+    bool firstRender
+  )
+  {
+    base.OnAfterRender(firstRender);
+    Console.WriteLine("Container: re-rendered");
+  }
+}

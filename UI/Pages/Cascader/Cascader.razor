@@ -1,0 +1,30 @@
+@page "/Cascader"
+
+
+<CascadingValue
+    Value="_dataHolder"
+    >
+    
+    
+    <h1>Cascading Page</h1>
+    <br>
+    <h2>Hello there, @(_dataHolder.Name)</h2>
+    
+    <button class="btn btn-primary" @onclick="RandomizeName">Randomize Name</button>
+    <br><br>
+    <NameEditor/>
+</CascadingValue>
+@code {
+
+    public class NameDataHolder
+    {
+        public string Name { get; set; } = "James Peach";
+    }
+
+    readonly NameDataHolder _dataHolder = new();
+    
+    void RandomizeName()
+    {
+        _dataHolder.Name = RandomNameHelper.GetRandomName();
+    }
+}
