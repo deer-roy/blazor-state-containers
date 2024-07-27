@@ -1,4 +1,4 @@
-namespace BlazorState.Pages.ContainersEverywhere;
+namespace BlazorState.UI.Pages.ContainersEverywhere;
 
 public record StateMessage(
     bool Loading = false,

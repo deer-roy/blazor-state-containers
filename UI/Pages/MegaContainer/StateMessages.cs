@@ -1,7 +1,7 @@
-namespace BlazorState.Pages.MegaContainer;
+namespace BlazorState.UI.Pages.MegaContainer;
 
 public record StateMessages(
     bool Loading = false,
-    List<ModelMessage> Messages = null,
+    List<ModelMessage>? Messages = null,
     string? Error = null
 );

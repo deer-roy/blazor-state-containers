@@ -1,7 +1,7 @@
-using BlazorState.Pages.Container;
-using BlazorState.Pages.ContainersEverywhere;
-using BlazorState.Pages.MegaContainer;
 using BlazorState.UI;
+using BlazorState.UI.Pages.Container;
+using BlazorState.UI.Pages.ContainersEverywhere;
+using BlazorState.UI.Pages.MegaContainer;
 using BlazorState.Utils;
 using Microsoft.AspNetCore.Components.Web;
 using Microsoft.AspNetCore.Components.WebAssembly.Hosting;

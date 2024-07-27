@@ -1,6 +1,6 @@
 using Bogus;
 
-namespace BlazorState.Pages.MegaContainer;
+namespace BlazorState.UI.Pages.MegaContainer;
 
 public record ModelProfile
 (

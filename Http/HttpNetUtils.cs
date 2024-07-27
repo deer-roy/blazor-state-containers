@@ -1,6 +1,6 @@
 using System.Net;
 
-namespace BlazorState.Http2;
+namespace BlazorState.Http;
 
 public static class HttpNetUtils
 {

@@ -1,6 +1,6 @@
 using BlazorState.Utils;
 
-namespace BlazorState.Pages.MegaContainer;
+namespace BlazorState.UI.Pages.MegaContainer;
 
 public class UseCaseFetchProfile(
     StateContainer<StateProfile> userStateContainer

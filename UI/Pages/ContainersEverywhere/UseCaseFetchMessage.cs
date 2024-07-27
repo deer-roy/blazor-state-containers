@@ -1,10 +1,10 @@
-using BlazorState.Http2;
+using BlazorState.Http;
 using BlazorState.Utils;
 
-namespace BlazorState.Pages.ContainersEverywhere;
+namespace BlazorState.UI.Pages.ContainersEverywhere;
 
 public class UseCaseFetchMessage(
-    HttpClient httpClient, 
+    // HttpClient httpClient, 
     StateContainer<StateMessage> messageStateContainer
 )
 {

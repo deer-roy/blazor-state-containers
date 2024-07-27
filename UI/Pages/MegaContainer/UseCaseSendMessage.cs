@@ -1,6 +1,6 @@
 using BlazorState.Utils;
 
-namespace BlazorState.Pages.MegaContainer;
+namespace BlazorState.UI.Pages.MegaContainer;
 
 public class UseCaseSendMessage(
     StateContainer<StateMessages> messagesStateContainer
@@ -9,8 +9,13 @@ public class UseCaseSendMessage(
     public async Task Execute(ModelMessage message)
     {
         await Task.Delay(1000);
-        var messages = messagesStateContainer.State.Messages;
-        messages.Insert(0, message);
+        var messages = new List<ModelMessage>
+        {
+            message
+        };
+        if(messagesStateContainer.State.Messages is {} existingMessages)
+           messages.AddRange(existingMessages);
+       
         messagesStateContainer.State = messagesStateContainer.State with
         {
             Messages = messages

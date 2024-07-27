@@ -1,7 +1,7 @@
 using System.Net;
 using System.Text.Json;
 
-namespace BlazorState.Http2;
+namespace BlazorState.Http;
 
 public class HttpResponseNotOkException
 (

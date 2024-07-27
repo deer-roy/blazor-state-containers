@@ -1,5 +1,4 @@
 @page "/container"
-@using BlazorState.Pages.Container
 
 @inject NameStateContainer _NameStateContainer;
 @implements IDisposable
@@ -12,7 +11,7 @@
 
 <button class="btn btn-primary" @onclick="RandomizeName">Randomize Name</button>
 <br><br>
-<NameEditor/>
+<Container_NameEditor/>
 @code {
 
     void RandomizeName()

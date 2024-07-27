@@ -1,6 +1,6 @@
 using System.Text.Json;
 
-namespace BlazorState.Http2;
+namespace BlazorState.Http;
 
 public abstract class BaseHttpResult
 {

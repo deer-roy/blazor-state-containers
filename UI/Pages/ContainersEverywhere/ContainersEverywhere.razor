@@ -1,10 +1,9 @@
 @page "/ContainersEverywhere"
-@using BlazorState.Pages.Container
-@using BlazorState.Pages.ContainersEverywhere
 @inject StateContainer<StateMessage> _MessageStateContainer;
 @inject NameStateContainer _NameStateContainer;
 @inject UseCaseFetchMessage UseCaseFetchMessage;
 
+@using BlazorState.UI.Pages.Container
 @implements IDisposable
 
 <h3>Containers Everywhere</h3>

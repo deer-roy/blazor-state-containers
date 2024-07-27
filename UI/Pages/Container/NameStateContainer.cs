@@ -1,4 +1,4 @@
-namespace BlazorState.Pages.Container;
+namespace BlazorState.UI.Pages.Container;
 
 public class NameStateContainer
 {
