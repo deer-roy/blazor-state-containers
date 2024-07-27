@@ -55,7 +55,7 @@ else
                         <span aria-hidden="true">&times;</span>
                     </button>
                 </div>
-                @if (_sendMessageLoading)
+                @if (MessagesState.SendMessagesLoading)
                 {
                     
                     <DivImg Url="/spinner.svg" Style="margin: 84px auto;"/>
@@ -83,7 +83,6 @@ else
     StateMessages MessagesState => MessagesStateContainer.State;
     string _message = "";
     bool _showNewMessageModal;
-    bool _sendMessageLoading;
 
     protected override async Task OnInitializedAsync()
     {
@@ -99,14 +98,12 @@ else
 
     async Task SendMessage()
     {
-        _sendMessageLoading = true;
         await SendMessageUseCase.Execute(new ModelMessage(
             DateTime.Now,
             ProfileStateContainer.State.User?.UserName ?? "Anonymous",
             _message
         ));
 
-        _sendMessageLoading = false;
         _message = "";
         CloseNewMessageModal();
     }

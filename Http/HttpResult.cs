@@ -7,10 +7,10 @@ namespace BlazorState.Http;
 
 public abstract record HttpError;
 
-public record HttpConnectionError
-(
-    string Error
-) : HttpError;
+public record HttpConnectionError : HttpError
+{
+    public const string Error = "Could not connect to server, please check your connection and try again.";
+}
 
 public record HttpNotOkError(
     HttpStatusCode StatusCode,

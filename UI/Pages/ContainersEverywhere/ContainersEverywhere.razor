@@ -24,7 +24,10 @@
     }
     else if (MsgState.Error != null)
     {
-        <h4>Request failed with error: @(_MessageStateContainer.State.Error)</h4>
+        <span class="material-symbols-rounded">
+            warning
+        </span>
+        <p>@(_MessageStateContainer.State.Error)</p>
         <button class="btn btn-primary" @onclick="FetchMessage">Try again</button>
     }
     else

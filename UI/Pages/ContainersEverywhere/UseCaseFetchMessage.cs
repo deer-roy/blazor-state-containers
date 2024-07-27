@@ -19,7 +19,7 @@ public class UseCaseFetchMessage(
         var message = result.Data;
         var error = result.Error switch
         {
-            HttpConnectionError e => e.Error,
+            HttpConnectionError e => HttpConnectionError.Error,
             HttpDeserializationError e => $"Failed to deserialize: {e.Response}.",
             HttpNotOkError e => e.Response,
             _ => null

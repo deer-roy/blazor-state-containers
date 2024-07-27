@@ -17,9 +17,9 @@ public static class HttpMessageExtensions
                 ? new HttpNotOkError(response.StatusCode, responseString) 
                 : null;
         }
-        catch (Exception e)
+        catch (Exception)
         {
-            return new HttpConnectionError(e.Message);
+            return new HttpConnectionError();
         }
     }
     
@@ -50,11 +50,11 @@ public static class HttpMessageExtensions
             
             return new HttpResult<T>{ Data = data };
         }
-        catch (Exception e)
+        catch (Exception)
         {
             return new HttpResult<T>
             {
-                Error = new HttpConnectionError(e.Message)
+                Error = new HttpConnectionError()
             };
         }
     }

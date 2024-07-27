@@ -8,6 +8,10 @@ public class UseCaseSendMessage(
 {
     public async Task Execute(ModelMessage message)
     {
+        messagesStateContainer.State = messagesStateContainer.State with
+        {
+            SendMessagesLoading = true
+        };
         await Task.Delay(1000);
         var messages = new List<ModelMessage>
         {
@@ -18,7 +22,8 @@ public class UseCaseSendMessage(
        
         messagesStateContainer.State = messagesStateContainer.State with
         {
-            Messages = messages
+            Messages = messages,
+            SendMessagesLoading = false
         };
     }
 }
