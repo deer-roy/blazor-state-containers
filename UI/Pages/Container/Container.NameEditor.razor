@@ -12,24 +12,13 @@
   {
     base.OnInitialized();
     _newName = _NameStateContainer.Name;
-
-    // _NameStateContainer.OnChange += StateHasChanged;
+    
     _NameStateContainer.OnChange += () => {
       _newName = _NameStateContainer.Name;
-      
-    Console.WriteLine("NameEditor: OnChange");
       StateHasChanged();
     };
   }
 
-  protected override void OnAfterRender
-  (
-    bool firstRender
-  )
-  {
-    base.OnAfterRender(firstRender);
-    Console.WriteLine("NameEditor: re-rendered");
-  }
 
 
   void SaveName()

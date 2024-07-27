@@ -1,3 +1,4 @@
+using BlazorState.NetworkClient;
 using BlazorState.UI;
 using BlazorState.UI.Pages.Container;
 using BlazorState.UI.Pages.ContainersEverywhere;
@@ -11,6 +12,7 @@ builder.RootComponents.Add<App>("#app");
 builder.RootComponents.Add<HeadOutlet>("head::after");
 
 builder.Services.AddScoped(sp => new HttpClient { BaseAddress = new Uri(builder.HostEnvironment.BaseAddress) });
+builder.Services.AddTransient<NetworkClient>();
 
 // state container
 builder.Services.AddSingleton<NameStateContainer>();

@@ -1,50 +1,37 @@
+using System.Net;
 using System.Text.Json;
 
 namespace BlazorState.Http;
 
-public abstract class BaseHttpResult
+
+
+public abstract record HttpError;
+
+public record HttpConnectionError
+(
+    string Error
+) : HttpError;
+
+public record HttpNotOkError(
+    HttpStatusCode StatusCode,
+    string Response
+) : HttpError
 {
-    protected readonly Task<HttpResponseMessage> Task;
-
-    protected BaseHttpResult(Task<HttpResponseMessage> task)
+    public T? ParseResponse<T>()
     {
-        Task = task;
-    }
-
-}
-
-public class HttpResult: BaseHttpResult
-{
-    public HttpResult(Task<HttpResponseMessage> task)
-    :base(task)
-    {
-    }
-
-    public async Task Unwrap()
-    {
-        var response = await Task;
-        var responseString = await response.Content.ReadAsStringAsync();
-        HttpNetUtils.EnsureSuccessful(response.StatusCode, responseString);
+        return JsonSerializer.Deserialize<T>(Response);
     }
 }
 
-public class HttpDataResult<T>:BaseHttpResult
+public record HttpDeserializationError(
+    string Response
+) : HttpError;
+
+public class HttpResult
 {
-    public HttpDataResult(Task<HttpResponseMessage> task)
-    :base(task)
-    {
-    }
-
-    public async Task<T> Unwrap()
-    {
-        var response = await Task;
-        var responseString = await response.Content.ReadAsStringAsync();
-        HttpNetUtils.EnsureSuccessful(response.StatusCode, responseString);
-
-        var data = JsonSerializer.Deserialize<T>(responseString);
-        if (data == null)
-            throw new HttpResponseDeserializationException(responseString);
-
-        return data;
-    }
+   public HttpError? Error { get; set; }
+}
+public class HttpResult<T> : HttpResult
+{
+   public T? Data { get; set; }
 }

@@ -18,27 +18,25 @@
 <div style="border: 1px solid darkslategrey; padding: 16px;">
     <h2>Server message things</h2>
     <br><br>
-    @if (Msg.Loading)
+    @if (MsgState.Loading)
     {
         <div style="margin: auto; width: 64px; height: 64px; background-image: url('/spinner.svg'); background-size: cover;"></div>
     }
-    else if (Msg.Error != null)
+    else if (MsgState.Error != null)
     {
         <h4>Request failed with error: @(_MessageStateContainer.State.Error)</h4>
         <button class="btn btn-primary" @onclick="FetchMessage">Try again</button>
     }
     else
     {
-        <h4>@(Message)</h4>
+        <h4>@(MsgState.Message ?? "No messages, maybe try fetching one")</h4>
         <button class="btn btn-primary" @onclick="FetchMessage">Fetch Message</button>
     }
 </div>
 
 @code {
 
-    StateMessage Msg => _MessageStateContainer.State;
-    string Message => string.IsNullOrWhiteSpace(Msg.Message) ?
-        "No messages, maybe try fetching one" : Msg.Message;
+    StateMessage MsgState => _MessageStateContainer.State;
     
     protected override void OnInitialized()
     {
@@ -57,15 +55,6 @@
         _NameStateContainer.Name = RandomNameHelper.GetRandomName();
     }
 
-    protected override void OnAfterRender
-    (
-        bool firstRender
-    )
-    {
-        base.OnAfterRender(firstRender);
-        if(!firstRender)
-            Console.WriteLine("ContainersEverywhere: Re-rendered");
-    }
     Task FetchMessage()
     {
         return UseCaseFetchMessage.Execute();
